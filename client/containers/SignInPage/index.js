@@ -28,10 +28,25 @@ class SignInPage extends Component {
     })
   }
 
-  signIn = async () => {
-    const token = axios({
-      method: 'http://localhost:3000'
-    })
+  signIn =  async () => {
+    try {
+      const {data}  =  await axios({
+        method: 'post',
+        url: 'http://localhost:3000/users/login',
+        data: {
+          email: this.state.email,
+          password: this.state.password
+        }
+      })
+
+      await AsyncStorage.setItem('token', data.token);
+      await AsyncStorage.setItem('email', data.user.email);
+      await AsyncStorage.setItem('name', data.user.name);
+      await AsyncStorage.setItem('id', data.user.id);
+      this.props.navigation.navigate('HomePage');
+    } catch(err) {
+      alert(err)
+    }
   }
 
   render() { 
@@ -41,13 +56,17 @@ class SignInPage extends Component {
           <Form style={styles.paper}>
             <Item floatingLabel>
               <Label>Email</Label>
-              <Input onChangeText={this.setOnChangedEmail} />
+              <Input 
+                onChangeText={this.setOnChangedEmail}
+                autoCapitalize='none'
+              />
             </Item>
             <Item floatingLabel>
               <Label>Password</Label>
               <Input 
-                secureTextEntry={true} 
-                onChangeText={this.setOnChangedPassword} />
+                secureTextEntry={true}
+                autoCapitalize='none'
+                onChangeText={this.setOnChangedPassword}
               />
             </Item>
             <Button style={styles.button} 
