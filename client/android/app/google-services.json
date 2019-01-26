@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "1013314158402",
+    "firebase_url": "https://final-project-hacitv8.firebaseio.com",
+    "project_id": "final-project-hacitv8",
+    "storage_bucket": "final-project-hacitv8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1013314158402:android:b3a6307c17b3fb1c",
+        "android_client_info": {
+          "package_name": "com.client"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1013314158402-eonod1i922a71dik9041maoskna576rg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyTIoJ_EtWeur7idp5VLUDGqXQn3bdHwY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

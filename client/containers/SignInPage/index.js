@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Container, Button , Form, Item, Input, Label, Content } from 'native-base';
 import { StyleSheet, View, Text, AsyncStorage } from 'react-native';
 import axios from 'axios';
+import firebase from 'react-native-firebase';
 
 class SignInPage extends Component {
   constructor(props) {
@@ -13,6 +14,9 @@ class SignInPage extends Component {
   }
 
   moveToSignUp = () => {
+    firebase.database().ref('/Users').push({
+      message: 'halo firebase'
+    })
     this.props.navigation.navigate('SignUp');
   }
 
