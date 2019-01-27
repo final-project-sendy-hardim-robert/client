@@ -14,7 +14,7 @@ export default class SideDrawer extends Component {
     return (
       <Drawer
         ref={(ref) => { this.drawer = ref; }}
-        content={<SideBar navigator={this.navigator} />}
+        content={<SideBar navigation={this.props.navigation} />}
         onClose={() => this.closeDrawer()} >
         <Container>
           <CustomHeader

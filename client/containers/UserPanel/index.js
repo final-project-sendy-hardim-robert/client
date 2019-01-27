@@ -29,7 +29,7 @@ export default class Home extends Component {
 
   render() {
     return (
-      <SideDrawer pageTitle="Home">
+      <SideDrawer pageTitle="Home" navigation={this.props.navigation}>
         <Grid style={{ marginHorizontal: 10, marginTop: 20 }}>
           <Row style={{ height: height / 3 }}>
             <UserControl
