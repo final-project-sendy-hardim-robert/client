@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Button , Form, Item, Input, Label, Content } from 'native-base';
+import { Container, Button , Form, Item, Input, Label } from 'native-base';
 import { StyleSheet, View, Text, AsyncStorage } from 'react-native';
 import axios from 'axios';
 import firebase from 'react-native-firebase';
@@ -17,6 +17,7 @@ class SignInPage extends Component {
     firebase.database().ref('/Users').push({
       message: 'halo firebase'
     })
+
     this.props.navigation.navigate('SignUp');
   }
 
@@ -41,6 +42,10 @@ class SignInPage extends Component {
           email: this.state.email,
           password: this.state.password
         }
+      })
+
+      const snapshot = await firebase.database().ref(`/Users/${data.user.id}`).set({
+          hangNow: false 
       })
 
       await AsyncStorage.setItem('token', data.token);
