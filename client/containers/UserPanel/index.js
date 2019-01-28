@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { Dimensions } from 'react-native';
+import { Dimensions, AsyncStorage } from 'react-native';
 import { Col, Row, Grid } from 'react-native-easy-grid';
 import SideDrawer from '../../components/Drawer';
 import UserControl from './components/UserControl';
+import firebase from 'react-native-firebase';
 
 const { height, width } = Dimensions.get('window');
 
@@ -13,15 +14,28 @@ export default class Home extends Component {
   openDrawer = () => {
     this.drawer._root.open()
   };
+
+  hangNow = async () => {
+    try {
+      const userId = await AsyncStorage.getItem('id');
+      await firebase.database().ref(`/Users/${userId}`).update({
+        hangNow: true
+      })
+
+    } catch(err) {
+      alert(err)
+    }
+  }
+
   render() {
     return (
-      <SideDrawer pageTitle="Home">
+      <SideDrawer pageTitle="Home" navigation={this.props.navigation}>
         <Grid style={{ marginHorizontal: 10, marginTop: 20 }}>
           <Row style={{ height: height / 3 }}>
             <UserControl
               description="Hang it now"
               color="#F67280"
-              fn={() => alert('boy')}
+              fn={this.hangNow}
               symbol="shirt"
             />
             <UserControl

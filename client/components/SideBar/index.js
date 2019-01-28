@@ -1,11 +1,21 @@
 import React, { Component } from 'react'
-import { Text, StyleSheet, Image, Dimensions } from 'react-native'
+import { Text, StyleSheet, Image, Dimensions, AsyncStorage, ToastAndroid } from 'react-native'
 import { Container, Col, Row, Grid } from 'native-base'
 import List from './list'
 const { height, width } = Dimensions.get('window')
 
 
 export default class SideBar extends Component {
+  logOut = async () => {
+    try {
+      await AsyncStorage.clear();
+      this.props.navigation.navigate('FirstPage');
+      ToastAndroid.show('Succesfully log out!', ToastAndroid.SHORT);
+    } catch(err) {
+    alert(err)
+  }
+}
+
   render() {
     return (
       <Container style={style.bg}>
@@ -27,7 +37,7 @@ export default class SideBar extends Component {
           <List title="Status" iconName="umbrella" />
           <List title="Notification" iconName="notifications" />
           <List title="Schedule" iconName="clock" />
-          <List title="Logout" iconName="power" />
+          <List title="Logout" iconName="power" action={this.logOut} />
         </Grid>
       </Container>
     )

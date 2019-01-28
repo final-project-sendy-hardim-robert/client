@@ -7,7 +7,7 @@ const { height, width } = Dimensions.get('window')
 export default class List extends Component {
   render() {
     return (
-      <Row style={{ height: height / 9, borderBottomColor: 'white', borderBottomWidth: 1 }} onPress={() => {alert('boi')}}>
+      <Row style={{ height: height / 9, borderBottomColor: 'white', borderBottomWidth: 1 }} onPress={this.props.action}>
         <Col style={{ width: '30%', justifyContent: 'center' }}>
           <Icon name={this.props.iconName} style={{ color: 'white', fontSize: 40, paddingHorizontal: 30 }} />
         </Col>
