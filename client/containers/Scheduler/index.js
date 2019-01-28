@@ -1,67 +1,75 @@
 import React, { Component } from 'react';
-import { Dimensions, TimePickerAndroid, View, AsyncStorage } from 'react-native';
+import { Dimensions, TimePickerAndroid, View, AsyncStorage, Switch } from 'react-native';
 import { Container, Header, Content, ListItem, CheckBox, Text, Body, Button } from 'native-base';
-import { Col, Row, Grid } from 'react-native-easy-grid';
 import SideDrawer from '../../components/Drawer';
 import axios from 'axios';
+import { withNavigation } from 'react-navigation'
 const { height, width } = Dimensions.get('window');
 
-export default class Scheduler extends Component {
+class Scheduler extends Component {
   state = {
     start: 10,
-    finish: 18
+    finish: 17,
+    token: '',
+    active: false
   }
 
-  componentDidMount() {
-    axios({
-      method: 'GET',
-      url: 'http://localhost:3000/schedule',
-      headers: {
-        token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiZGhpbWFzaGFyeSIsImVtYWlsIjoiZGhpbWFzLmhhcnlAZ21haWwuY29tIiwiaWF0IjoxNTQ4NjAxNTU3fQ.hqkeIgq8USxEifPfdibp49Tf9jpb-2Z0N5nllXxoKNg'
-      }
-    })
-      .then(({ data }) => {
-        this.setState({
-          start: data.startTime,
-          finish: data.finishTime
-        })
-      })
-      .catch(err => {
-        console.log(err)
-      })
-  }
-
-
-  saveSchedule = async () => {
+  componentDidMount = async () => {
     try {
       const value = await AsyncStorage.getItem('token');
-      if (value !== null) {
-        // We have data!!
-        axios({
-          method: 'POST',
+
+      alert(value)
+      if (value) {
+        alert('boi', JSON.stringify(value))
+        const { data } = await axios({
+          method: 'GET',
           url: 'http://localhost:3000/schedule',
-          data: {
-            start: this.state.start,
-            finish: this.state.finish
-          },
           headers: {
-            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiZGhpbWFzaGFyIiwiZW1haWwiOiJkaGltYXMuaGFyQGdtYWlsLmNvbSIsImlhdCI6MTU0ODYwNzM1M30.hkTBD1kPBe1u1S95ccHFpKXHd3yOeGwX4TIvFUEIjG4'
+            token: value
           }
-        }).then(({ data }) => {
-          alert('done')
         })
-          .catch(err => {
-            alert(JSON.stringify(err))
-            //alert('fail')
+        if (data) {
+          this.setState({
+            start: data.startTime,
+            finish: data.finishTime,
+            active: data.active,
+            token: value
           })
-        //alert(value);
-        //return value
+        } else {
+          this.setState({
+            ...this.state,
+            token: value
+          })
+        }
+
       } else {
         alert('please login first')
       }
     } catch (err) {
       console.log(err)
     }
+  }
+
+  saveSchedule = () => {
+    axios({
+      method: 'POST',
+      url: 'http://localhost:3000/schedule',
+      data: {
+        start: this.state.start,
+        finish: this.state.finish,
+        active: this.state.active
+      },
+      headers: {
+        token: this.state.token
+      }
+    }).then(({ data }) => {
+      this.setState({
+        ...this.state,
+        active: false
+      })
+    })
+      .catch(err => {
+      })
   }
 
   pickHangTime = async (param) => {
@@ -85,14 +93,74 @@ export default class Scheduler extends Component {
     }
   }
 
+  turnOnSchedule = () => {
+    axios({
+      method: 'POST',
+      url: 'http://localhost:3000/schedule/start',
+      headers: {
+        token: this.state.token
+      }
+    })
+      .then(({ data }) => {
+        alert(data)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
+
+  turnOffSchedule = () => {
+    axios({
+      method: 'POST',
+      url: 'http://localhost:3000/schedule/finish',
+      headers: {
+        token: this.state.token
+      }
+    })
+      .then(({ data }) => {
+        alert(data)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
+
   render() {
     return (
-      <SideDrawer pageTitle="Scheduler">
+      <SideDrawer pageTitle="Scheduler" navigation={this.props.navigation}>
         <Content style={{}}>
-          <Text>Current Schedule: </Text>
-          <Text>Start : {this.state.start} </Text>
-          <Text>Finish : {this.state.finish} </Text>
           <View style={{ padding: 15 }}>
+            <Text>Current Schedule: </Text>
+            <Text>Start : {this.state.start} </Text>
+            <Text>Finish : {this.state.finish} </Text>
+            <View style={{ marginVertical: 20, flexDirection: 'row' }}>
+              <Text style={{
+                marginRight: 50,
+                fontSize: 20
+              }}>
+                Active :
+            </Text>
+              <Switch
+                trackColor={{
+                  false: 'grey',
+                  true: 'green'
+                }}
+                style={{ transform: [{ scaleX: 2 }, { scaleY: 2 }], marginRight: 'auto' }}
+                onValueChange={() => {
+                  let active = this.state.active
+                  this.setState({
+                    active: !active
+                  }, () => {
+                    this.state.active
+                      ? this.turnOnSchedule()
+                      : this.turnOffSchedule()
+                  })
+                }}
+                value={
+                  this.state.active
+                }
+              />
+            </View>
             <Text style={{ paddingVertical: 10, fontSize: 18 }}>Hang Clothes At: </Text>
             <Button
               onPress={() => { this.pickHangTime('start') }}
@@ -105,15 +173,14 @@ export default class Scheduler extends Component {
             >
               <Text>Pick Time </Text>
             </Button>
-
             <Button
               onPress={() => { this.saveSchedule() }}
-              style={{ padding: 15 }}
+              style={{ padding: 15, marginVertical: 20 }}
             >
               <Text>Save Schedule</Text>
             </Button>
           </View>
-          <Text style={{ paddingVertical: 10, paddingLeft: 10, fontSize: 18 }}> Run Scheduler for : </Text>
+          {/* <Text style={{ paddingVertical: 10, paddingLeft: 10, fontSize: 18 }}> Run Scheduler for : </Text>
           <ListItem>
             <CheckBox checked={true} />
             <Body>
@@ -152,10 +219,12 @@ export default class Scheduler extends Component {
               <Text style={{ fontSize: 14 }}>Saturday</Text>
             </Body>
             <Body></Body>
-          </ListItem>
+          </ListItem> */}
         </Content>
 
       </SideDrawer>
     )
   }
 }
+
+export default withNavigation(Scheduler)
