@@ -8,6 +8,11 @@ import firebase from 'react-native-firebase';
 const { height, width } = Dimensions.get('window');
 
 export default class Home extends Component {
+
+  state = {
+    hangNow: false
+  }
+
   closeDrawer = () => {
     this.drawer._root.close()
   };
@@ -18,10 +23,20 @@ export default class Home extends Component {
   hangNow = async () => {
     try {
       const userId = await AsyncStorage.getItem('id');
-      await firebase.database().ref(`/Users/${userId}`).update({
-        hangNow: true
-      })
 
+      if (!this.state.hangNow) {
+        await firebase.database().ref(`/Users/${userId}`).update({
+          hangNow: true
+        })
+      } else {
+        await firebase.database().ref(`/Users/${userId}`).update({
+          hangNow: false
+        })
+      }
+
+      this.setState({
+        hangNow: !this.state.hangNow
+      })
     } catch(err) {
       alert(err)
     }
@@ -33,7 +48,7 @@ export default class Home extends Component {
         <Grid style={{ marginHorizontal: 10, marginTop: 20 }}>
           <Row style={{ height: height / 3 }}>
             <UserControl
-              description="Hang it now"
+              description={!this.state.hangNow ? "Hang it now" : "Take it down"}
               color="#F67280"
               fn={this.hangNow}
               symbol="shirt"
