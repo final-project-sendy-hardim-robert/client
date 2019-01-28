@@ -13,7 +13,7 @@ export default class List extends Component {
         </Col>
         <Col style={{ width: '70%', alignItems: 'flex-start', justifyContent: 'center' }}>
           <Text style={{ color: 'white', fontSize: 20 }}>
-            {this.props.title}
+            {this.props.title} {this.props.navigateTo}
           </Text>
         </Col>
       </Row>

@@ -11,10 +11,15 @@ export default class SideBar extends Component {
       await AsyncStorage.clear();
       this.props.navigation.navigate('FirstPage');
       ToastAndroid.show('Succesfully log out!', ToastAndroid.SHORT);
-    } catch(err) {
-    alert(err)
+    } catch (err) {
+      alert(err)
+    }
   }
-}
+
+  navigateTo = (path) => {
+    alert('boi'+ path)
+    this.props.navigation.navigate('Schedule')
+  }
 
   render() {
     return (
@@ -36,7 +41,7 @@ export default class SideBar extends Component {
           <List title="Home" iconName="home" />
           <List title="Status" iconName="umbrella" />
           <List title="Notification" iconName="notifications" />
-          <List title="Schedule" iconName="clock" />
+          <List title="Schedule" iconName="clock" action={() => this.navigateTo('Schedule')} />
           <List title="Logout" iconName="power" action={this.logOut} />
         </Grid>
       </Container>
