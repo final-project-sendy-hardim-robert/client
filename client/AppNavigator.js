@@ -15,7 +15,7 @@ const FirstPage = createStackNavigator({
   })
 
 const Home = createStackNavigator({
-  HomePage: Scheduler,
+  HomePage: HomePage,
   Schedule: Scheduler
 }, {
     headerMode: 'none',
