@@ -1,0 +1,9 @@
+Yang dibutuhkan seseorang ketika mengeset schedule jemuran:
+
+1. date picker memilih tanggal berapa mau dibikin schedule ? 
+2. hour picker , memilih otomatis diangkat jam berapa ? dan dijemur jam berapa ?
+3. --automatically set day ? tiap hari apa mau dijemurin ada pilihan today --
+//cron akan otomatis mengangkat jemuran ketika terkena air//
+//cron akan otomatis menjemur jemuran kembali ketika sensor air sudah kering//
+
+4.push notification ?
