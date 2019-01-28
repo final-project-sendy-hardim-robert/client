@@ -15,16 +15,13 @@ export default class Home extends Component {
   }
 
   async componentDidMount() {
+    console.log('kuda')
     try {
       const userId = await AsyncStorage.getItem('id');
       firebase.database().ref(`/Users/${userId}`).on('value', (snapshot, err) => {
-        if (!err) {
-          if (snapshot.val().hangNow !== this.state.hangNow) {
-            this.setState({
-              hangNow: snapshot.val().hangNow
-            }, () => alert(this.state.hangNow, 'halo'))
-          }
-        }
+        setTimeout(() => this.setState({
+          hangNow: snapshot.val().hangNow
+        }), 100)      
       })
     } catch(err) {
       alert(err);
@@ -45,21 +42,25 @@ export default class Home extends Component {
         await firebase.database().ref(`/Users/${userId}`).update({
           hangNow: true
         })
+        
+        this.setState({
+          hangNow: !this.state.hangNow
+        })
       } else {
         await firebase.database().ref(`/Users/${userId}`).update({
           hangNow: false
         })
+        this.setState({
+          hangNow: !this.state.hangNow
+        })
       }
-
-      this.setState({
-        hangNow: !this.state.hangNow
-      })
     } catch(err) {
       alert(err)
     }
   }
 
   render() {
+    console.log(this.state.hangNow, 'masa berubah 2x');
     return (
       <SideDrawer pageTitle="Home" navigation={this.props.navigation}>
         <Grid style={{ marginHorizontal: 10, marginTop: 20 }}>
