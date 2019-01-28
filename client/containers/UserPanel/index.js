@@ -4,6 +4,7 @@ import { Col, Row, Grid } from 'react-native-easy-grid';
 import SideDrawer from '../../components/Drawer';
 import UserControl from './components/UserControl';
 import firebase from 'react-native-firebase';
+//import WeatherPrediction from './components/WeatherPrediction.js';
 
 const { height, width } = Dimensions.get('window');
 
@@ -11,6 +12,23 @@ export default class Home extends Component {
 
   state = {
     hangNow: false
+  }
+
+  async componentDidMount() {
+    try {
+      const userId = await AsyncStorage.getItem('id');
+      firebase.database().ref(`/Users/${userId}`).on('value', (snapshot, err) => {
+        if (!err) {
+          if (snapshot.val().hangNow !== this.state.hangNow) {
+            this.setState({
+              hangNow: snapshot.val().hangNow
+            }, () => alert(this.state.hangNow, 'halo'))
+          }
+        }
+      })
+    } catch(err) {
+      alert(err);
+    }
   }
 
   closeDrawer = () => {
@@ -23,7 +41,6 @@ export default class Home extends Component {
   hangNow = async () => {
     try {
       const userId = await AsyncStorage.getItem('id');
-
       if (!this.state.hangNow) {
         await firebase.database().ref(`/Users/${userId}`).update({
           hangNow: true
