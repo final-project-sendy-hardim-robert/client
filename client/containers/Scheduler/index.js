@@ -8,8 +8,8 @@ const { height, width } = Dimensions.get('window');
 
 class Scheduler extends Component {
   state = {
-    start: 10,
-    finish: 17,
+    start: '',
+    finish: '',
     token: '',
     active: false
   }
@@ -17,33 +17,26 @@ class Scheduler extends Component {
   componentDidMount = async () => {
     try {
       const value = await AsyncStorage.getItem('token');
-
-      alert(value)
-      if (value) {
-        alert('boi', JSON.stringify(value))
-        const { data } = await axios({
+      const { data } = await axios({
           method: 'GET',
           url: 'http://localhost:3000/schedule',
           headers: {
             token: value
           }
         })
-        if (data) {
-          this.setState({
-            start: data.startTime,
-            finish: data.finishTime,
-            active: data.active,
-            token: value
-          })
-        } else {
-          this.setState({
-            ...this.state,
-            token: value
-          })
-        }
 
+      if (data) {
+        this.setState({
+          start: data.startTime,
+          finish: data.finishTime,
+          active: data.active,
+          token: value
+        })
       } else {
-        alert('please login first')
+        this.setState({
+          ...this.state,
+          token: value
+        })
       }
     } catch (err) {
       console.log(err)
@@ -74,9 +67,12 @@ class Scheduler extends Component {
 
   pickHangTime = async (param) => {
     try {
+      const date = new Date();
+      const currentHour = date.getHours();
+      const currentMinutes = date.getMinutes();
       const { action, hour, minute } = await TimePickerAndroid.open({
-        hour: 10,
-        minute: 0,
+        hour: currentHour,
+        minute: currentMinutes,
         is24Hour: false,
       });
       if (action !== TimePickerAndroid.dismissedAction) {
