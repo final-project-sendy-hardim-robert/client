@@ -17,14 +17,14 @@ export default class SideBar extends Component {
   }
 
   navigateTo = (path) => {
-    this.props.navigation.navigate('Schedule')
+    this.props.navigation.navigate(path)
   }
 
   render() {
     return (
       <Container style={style.bg}>
         <Grid>
-          <Row style={{ height: height / 6, borderBottomColor: 'white', borderBottomWidth: 1 }}>
+          <Row style={{ height: height / 6, borderBottomColor: 'lightgrey', borderBottomWidth: 0.8 }}>
             <Image
               source={{
                 uri: 'https://cdn0.iconfinder.com/data/icons/avatars-6/500/Avatar_boy_man_people_account_boss_client_beard_male_person_user-512.png'
@@ -33,11 +33,11 @@ export default class SideBar extends Component {
             />
             <Col style={{ justifyContent: 'center' }}>
               <Text style={style.greeting}>
-                Hallo, username
+                Hello, username
               </Text>
             </Col>
           </Row>
-          <List title="Home" iconName="home" />
+          <List title="Home" iconName="home" action={() => this.navigateTo('HomePage')} />
           <List title="Status" iconName="umbrella" />
           <List title="Notification" iconName="notifications" />
           <List title="Schedule" iconName="clock" action={() => this.navigateTo('Schedule')} />
@@ -50,12 +50,12 @@ export default class SideBar extends Component {
 
 const style = StyleSheet.create({
   bg: {
-    backgroundColor: '#4893D8',
+    backgroundColor: 'white',
     height: '100%'
   },
   greeting: {
     fontSize: 20,
-    color: 'white',
+    color: 'black',
     marginHorizontal: 'auto'
   },
   avatar: {
