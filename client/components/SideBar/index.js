@@ -6,6 +6,10 @@ const { height, width } = Dimensions.get('window')
 
 
 export default class SideBar extends Component {
+  state = {
+    username: '',
+    email: ''
+  }
   logOut = async () => {
     try {
       await AsyncStorage.clear();
@@ -18,6 +22,16 @@ export default class SideBar extends Component {
 
   navigateTo = (path) => {
     this.props.navigation.navigate(path)
+  }
+
+  componentDidMount = async () => {
+    try {
+      const username = await AsyncStorage.getItem('name')
+      const email = await AsyncStorage.getItem('email')
+      this.setState({username, email})
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   render() {
@@ -33,14 +47,16 @@ export default class SideBar extends Component {
             />
             <Col style={{ justifyContent: 'center' }}>
               <Text style={style.greeting}>
-                Hello, username
+                Hello, {this.state.username}
+              </Text>
+              <Text>
+                {this.state.email}
               </Text>
             </Col>
           </Row>
           <List title="Home" iconName="home" action={() => this.navigateTo('HomePage')} />
-          <List title="Status" iconName="umbrella" />
-          <List title="Notification" iconName="notifications" />
           <List title="Schedule" iconName="clock" action={() => this.navigateTo('Schedule')} />
+          <List title="Weather" iconName="cloud" action={() => this.navigateTo('Schedule')} />
           <List title="Logout" iconName="power" action={this.logOut} />
         </Grid>
       </Container>
