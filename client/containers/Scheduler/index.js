@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Dimensions, TimePickerAndroid, View, AsyncStorage, Switch } from 'react-native';
+import { Dimensions, TimePickerAndroid, View, AsyncStorage, Switch, StyleSheet } from 'react-native';
 import { Container, Header, Content, ListItem, CheckBox, Text, Body, Button } from 'native-base';
 import SideDrawer from '../../components/Drawer';
 import axios from 'axios';
@@ -124,103 +124,112 @@ class Scheduler extends Component {
   render() {
     return (
       <SideDrawer pageTitle="Scheduler" navigation={this.props.navigation}>
-        <Content style={{}}>
-          <View style={{ padding: 15 }}>
-            <Text>Current Schedule: </Text>
-            <Text>Start : {this.state.start} </Text>
-            <Text>Finish : {this.state.finish} </Text>
-            <View style={{ marginVertical: 20, flexDirection: 'row' }}>
-              <Text style={{
-                marginRight: 50,
-                fontSize: 20
-              }}>
-                Active :
-            </Text>
-              <Switch
-                trackColor={{
-                  false: 'grey',
-                  true: 'green'
-                }}
-                style={{ transform: [{ scaleX: 2 }, { scaleY: 2 }], marginRight: 'auto' }}
-                onValueChange={() => {
-                  let active = this.state.active
-                  this.setState({
-                    active: !active
-                  }, () => {
+        <Content>
+          <View>
+            <View style={{ marginHorizontal: 30, marginTop: 30, marginBottom: 70, flexDirection: 'row', borderColor: 'lightgrey', borderWidth: 1, padding: 15, borderRadius: 30, backgroundColor: 'lightgrey'}}>
+              <View style={{flex: 3, alignItems: 'flex-start'}}>
+                <Text style={{
+                    marginRight: 50,
+                    fontSize: 20,
+                    color: 'grey'
+                  }}>
+                  Active :
+                </Text>
+              </View>
+              <View style={{flex: 3, alignItems: 'flex-end'}}>
+                <Switch
+                  trackColor={{
+                    false: 'grey',
+                    true: 'green'
+                  }}
+                  style={{ transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }] }}
+                  onValueChange={() => {
+                    let active = this.state.active
+                    this.setState({
+                      active: !active
+                    }, () => {
+                      this.state.active
+                        ? this.turnOnSchedule()
+                        : this.turnOffSchedule()
+                    })
+                  }}
+                  value={
                     this.state.active
-                      ? this.turnOnSchedule()
-                      : this.turnOffSchedule()
-                  })
-                }}
-                value={
-                  this.state.active
-                }
-              />
+                  }
+                />
+              </View>
             </View>
-            <Text style={{ paddingVertical: 10, fontSize: 18 }}>Hang Clothes At: </Text>
-            <Button
-              onPress={() => { this.pickHangTime('start') }}
-            >
-              <Text>Pick Time </Text>
-            </Button>
-            <Text style={{ paddingVertical: 10, fontSize: 18 }}>Collect Clothes At: </Text>
-            <Button
-              onPress={() => { this.pickHangTime('finish') }}
-            >
-              <Text>Pick Time </Text>
-            </Button>
-            <Button
-              onPress={() => { this.saveSchedule() }}
-              style={{ padding: 15, marginVertical: 20 }}
-            >
-              <Text>Save Schedule</Text>
-            </Button>
+            <View style={styles.container}>
+              <Text style={styles.start}>Hang clothes at</Text>
+              <Text style={styles.start}>Collect clothes at</Text>
+            </View>
+            <View style={styles.container}>
+              <Text style={styles.time}>{this.state.start} </Text>
+              <Text style={styles.time}>{this.state.finish} </Text>
+            </View>
+            <View style={styles.container}>
+             <View style={styles.button}>
+              <View>
+                  <Button
+                    rounded
+                    onPress={() => { this.pickHangTime('start') }}
+                    style={{backgroundColor: '#0072BB'}}
+                  >
+                    <Text>Pick Time </Text>
+                  </Button>
+              </View>
+             </View>
+             <View style={styles.button}>
+                <View>
+                  <Button
+                  rounded
+                  onPress={() => { this.pickHangTime('finish') }}
+                  style={{backgroundColor: '#0072BB'}}
+                  >
+                    <Text>Pick Time </Text>
+                  </Button>
+                </View>
+             </View>
+            </View>
+            <View style={{justifyContent: 'center', alignItems: 'center', marginTop: 100}}>
+              <View style={{}}>
+                <Button
+                  rounded
+                  onPress={() => { this.saveSchedule() }}
+                  style={{ paddingHorizontal: 85, paddingVertical: 30, backgroundColor: '#09901A' }}
+                >
+                  <Text>Save Schedule</Text>
+                </Button>
+              </View>
+            </View>
           </View>
-          {/* <Text style={{ paddingVertical: 10, paddingLeft: 10, fontSize: 18 }}> Run Scheduler for : </Text>
-          <ListItem>
-            <CheckBox checked={true} />
-            <Body>
-              <Text style={{ fontSize: 14 }}>Today</Text>
-            </Body>
-            <CheckBox checked={false} />
-            <Body>
-              <Text style={{ fontSize: 14 }}>Sunday</Text>
-            </Body>
-            <CheckBox checked={false} />
-            <Body>
-              <Text style={{ fontSize: 14 }}>Monday</Text>
-            </Body>
-          </ListItem>
-          <ListItem>
-            <CheckBox checked={false} />
-            <Body>
-              <Text style={{ fontSize: 14 }}>Tuesday</Text>
-            </Body>
-            <CheckBox checked={false} />
-            <Body>
-              <Text style={{ fontSize: 14 }}>Wednesday</Text>
-            </Body>
-            <CheckBox checked={false} />
-            <Body>
-              <Text style={{ fontSize: 14 }}>Thursday</Text>
-            </Body>
-          </ListItem>
-          <ListItem>
-            <CheckBox checked={false} />
-            <Body>
-              <Text style={{ fontSize: 14 }}>Friday</Text>
-            </Body>
-            <CheckBox checked={false} />
-            <Body>
-              <Text style={{ fontSize: 14 }}>Saturday</Text>
-            </Body>
-            <Body></Body>
-          </ListItem> */}
         </Content>
-
       </SideDrawer>
     )
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    justifyContent: 'center'
+  },
+  button: {
+    flex: 3,
+    alignItems: 'center',
+    marginTop: 10
+  },
+  start: {
+    flex: 3,
+    textAlign: 'center',
+    color: 'grey'
+  },
+  time: {
+    flex: 3,
+    textAlign: 'center',
+    fontSize: 48,
+    fontWeight: 'bold'
+  }
+})
 
 export default withNavigation(Scheduler)

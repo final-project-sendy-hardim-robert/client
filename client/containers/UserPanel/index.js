@@ -157,7 +157,7 @@ export default class Home extends Component {
             </CardItem>
           </Card>
       }
-        <Grid style={{ marginHorizontal: 10, marginTop: 20 }}>
+        <Grid style={{ marginHorizontal: 10, marginTop: 10 }}>
           <Row style={{ height: height / 3 }}>
             <UserControl
               description={!this.state.hangNow ? "Hang it now" : "Take it down"}
