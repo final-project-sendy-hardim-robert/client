@@ -126,7 +126,13 @@ export default class Home extends Component {
       let currentHour = new Date().getHours();
 
       for (let i = 0; i < weatherData.length; i++) {
-        if (Number(new Date(weatherData[i]['dt_txt']).getHours()) - Number(currentHour) >= 0) {
+        let datahour = Number(weatherData[i]['dt_txt'].substring(11, 13))
+        
+        if (datahour === 0) {
+          datahour = 24
+        }
+        
+        if (datahour - Number(currentHour) >= 0) {
           nextData = weatherData[i]
           break;
         } 
@@ -152,7 +158,7 @@ export default class Home extends Component {
                   <Text style={{ fontSize: 50 }}>{Math.floor(currentWeather.main.temp)}˚C</Text>
                 </View>
                 <Text>{(currentWeather.weather[0].description)}</Text>
-                <Text>{suggestion}</Text>
+                <Text>{JSON.stringify(suggestion)}</Text>
               </Body>
             </CardItem>
           </Card>
