@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Container, Button , Form, Item, Input, Label  } from 'native-base';
-import { StyleSheet, View, Text, KeyboardAvoidingView } from 'react-native';
+import { StyleSheet, View, Text, KeyboardAvoidingView, Image } from 'react-native';
 import axios from 'axios';
 
 
@@ -27,9 +27,9 @@ class SignUpPage extends Component {
       })
 
       this.props.navigation.navigate('SignIn');
-  } catch (err) {
-    alert(err)
-  }
+    } catch (err) {
+        alert(err)
+      }
   }
 
   setOnChangedEmail = (text) => {
@@ -53,30 +53,33 @@ class SignUpPage extends Component {
   render() { 
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>Sign Up Form</Text>
-          <Form style={styles.paper}>
-            <Item floatingLabel>
-              <Label>Name</Label>
+      <Image
+          style={{width: 230, height: 90, alignSelf: 'center', marginBottom: 20}}
+          source={{uri: "https://dewey.tailorbrands.com/production/brand_version_mockup_image/936/1632464936_c1cf6ed2-7b8f-4b14-aa8e-b6551add626f.png?cb=1548736167"}}
+      />
+          <Form>
+            <Item rounded style={{backgroundColor: 'white'}}>
               <Input 
                 onChangeText={this.setOnChangedName}
                 autoCapitalize="none"
+                placeholder="Name"
               />
             </Item>
-            <Item floatingLabel>
-              <Label>Email</Label>
+            <Item rounded style={{backgroundColor: 'white'}}>
               <Input 
                 onChangeText={this.setOnChangedEmail} 
                 autoCapitalize="none"
+                placeholder="Email address"
               />
             </Item>
-            <Item floatingLabel>
-              <Label>Password</Label>
+            <Item rounded style={{backgroundColor: 'white'}}>
               <Input 
                 onChangeText={this.setOnChangedPassword} 
                 secureTextEntry={true} 
+                placeholder="Password"
               />
             </Item>
-          <Button style={styles.button} block onPress={this.signUp}>
+          <Button style={styles.button} block rounded onPress={this.signUp}>
             <Text style={{ color: '#D9E2EC'}}>Sign Up</Text>
           </Button>
           </Form>
@@ -98,16 +101,14 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    fontWeight: '700', 
+    fontWeight: '300', 
     alignSelf: 'center',
-    marginBottom: 50,
+    marginBottom: 10,
     fontSize: 20
   },
   button: {
     marginTop: 20, 
-    marginLeft: 10, 
-    marginBottom: 10, 
-    backgroundColor: '#0A6C74'
+    backgroundColor: '#09901A'
   },
 
   paper: {

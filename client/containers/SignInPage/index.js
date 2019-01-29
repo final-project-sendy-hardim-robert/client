@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Container, Button , Form, Item, Input, Label } from 'native-base';
-import { StyleSheet, View, Text, AsyncStorage } from 'react-native';
+import { StyleSheet, View, Text, AsyncStorage, Image } from 'react-native';
 import axios from 'axios';
 import firebase from 'react-native-firebase';
 
@@ -61,34 +61,37 @@ class SignInPage extends Component {
   render() { 
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>Sign In Form</Text>
-          <Form style={styles.paper}>
-            <Item floatingLabel>
-              <Label>Email</Label>
+        <Image
+          style={{width: 230, height: 90, alignSelf: 'center', marginBottom: 20}}
+          source={{uri: "https://dewey.tailorbrands.com/production/brand_version_mockup_image/936/1632464936_c1cf6ed2-7b8f-4b14-aa8e-b6551add626f.png?cb=1548736167"}}
+        />
+          <Form>
+            <Item rounded style={{backgroundColor: 'white'}}>
               <Input 
                 onChangeText={this.setOnChangedEmail}
+                placeholder="user@mail.com"
                 autoCapitalize='none'
               />
             </Item>
-            <Item floatingLabel>
-              <Label>Password</Label>
+            <Item rounded style={{marginBottom: 8, backgroundColor: 'white'}}>
               <Input 
                 secureTextEntry={true}
                 autoCapitalize='none'
+                placeholder="myPass123!@#"
                 onChangeText={this.setOnChangedPassword}
               />
             </Item>
-            <Button style={styles.button} 
+            <Button rounded style={styles.button} 
               onPress={this.signIn}
               block
             >
               <Text style={{ color: '#D9E2EC'}}>Sign In</Text>
             </Button>
-            <Button style={styles.button} 
+            <Button rounded style={{marginTop: 4, backgroundColor: '#09901A'}}
               block
               onPress={this.moveToSignUp}
             >
-              <Text style={{ marginLeft: 10, color: '#D9E2EC' }}>Sign Up</Text>
+              <Text style={{ color: '#D9E2EC' }}>Sign Up</Text>
             </Button>
         </Form>
         </View>
@@ -109,26 +112,23 @@ const styles = StyleSheet.create({
   },
   
   button: {
-    marginTop: 20, 
-    marginLeft: 10, 
-    marginBottom: 10, 
-    backgroundColor: '#0A6C74'
+    marginTop: 10, 
+    backgroundColor: '#0072BB'
   },
 
   title: {
-    fontWeight: '700', 
+    fontWeight: 'bold', 
     alignSelf: 'center',
-    marginBottom: 50,
-    fontSize: 20
+    fontSize: 18,
+    marginBottom: 10
   },
 
   paper: {
-    paddingRight: 10,
-    borderRadius: 18,
+    paddingHorizontal: 30,
+    paddingVertical: 30,
     shadowColor: '#000',
     shadowOffset: {width: 0, height: 4},
     shadowOpacity: 0.8,
-    paddingBottom: 20,
     backgroundColor: 'white'
   }
 })
