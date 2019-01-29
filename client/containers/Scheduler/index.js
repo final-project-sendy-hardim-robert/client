@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Dimensions, TimePickerAndroid, View, AsyncStorage, Switch, StyleSheet } from 'react-native';
+import { Dimensions, TimePickerAndroid, View, AsyncStorage, Switch, StyleSheet, ToastAndroid } from 'react-native';
 import { Container, Header, Content, ListItem, CheckBox, Text, Body, Button } from 'native-base';
 import SideDrawer from '../../components/Drawer';
 import axios from 'axios';
@@ -60,6 +60,7 @@ class Scheduler extends Component {
         ...this.state,
         active: false
       })
+      ToastAndroid.show('Schedule saved, activate the toggle immediately!', ToastAndroid.SHORT)
     })
       .catch(err => {
       })
@@ -98,7 +99,6 @@ class Scheduler extends Component {
       }
     })
       .then(({ data }) => {
-        alert(data)
       })
       .catch(err => {
         console.log(err)
@@ -114,7 +114,6 @@ class Scheduler extends Component {
       }
     })
       .then(({ data }) => {
-        alert(data)
       })
       .catch(err => {
         console.log(err)
@@ -123,7 +122,7 @@ class Scheduler extends Component {
 
   render() {
     return (
-      <SideDrawer pageTitle="Scheduler" navigation={this.props.navigation}>
+      <SideDrawer pageTitle="Daily Schedule" navigation={this.props.navigation}>
         <Content>
           <View>
             <View style={{ marginHorizontal: 30, marginTop: 30, marginBottom: 70, flexDirection: 'row', borderColor: 'lightgrey', borderWidth: 1, padding: 15, borderRadius: 30, backgroundColor: 'lightgrey'}}>
@@ -148,9 +147,13 @@ class Scheduler extends Component {
                     this.setState({
                       active: !active
                     }, () => {
-                      this.state.active
-                        ? this.turnOnSchedule()
-                        : this.turnOffSchedule()
+                      if(this.state.active) {
+                        this.turnOnSchedule()
+                        ToastAndroid.show('Schedule activated', ToastAndroid.SHORT)
+                      } else {
+                        this.turnOffSchedule()
+                        ToastAndroid.show('Schedule off', ToastAndroid.SHORT)
+                      }
                     })
                   }}
                   value={
