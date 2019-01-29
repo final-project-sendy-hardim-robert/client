@@ -17,7 +17,6 @@ export default class SideBar extends Component {
   }
 
   navigateTo = (path) => {
-    alert('boi'+ path)
     this.props.navigation.navigate('Schedule')
   }
 

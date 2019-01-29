@@ -137,6 +137,8 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-device-info')
+    compile project(':react-native-firebase')
     implementation project(':react-native-firebase')
     implementation "com.google.firebase:firebase-database:16.0.1"
     compile project(':react-native-vector-icons')

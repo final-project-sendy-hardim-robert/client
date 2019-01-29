@@ -4,7 +4,6 @@ import { Col, Row, Grid } from 'react-native-easy-grid';
 import SideDrawer from '../../components/Drawer';
 import UserControl from './components/UserControl';
 import firebase from 'react-native-firebase';
-//import WeatherPrediction from './components/WeatherPrediction.js';
 
 const { height, width } = Dimensions.get('window');
 
@@ -15,13 +14,12 @@ export default class Home extends Component {
   }
 
   async componentDidMount() {
-    console.log('kuda')
     try {
       const userId = await AsyncStorage.getItem('id');
       firebase.database().ref(`/Users/${userId}`).on('value', (snapshot, err) => {
         setTimeout(() => this.setState({
           hangNow: snapshot.val().hangNow
-        }), 100)      
+        }), 500)      
       })
     } catch(err) {
       alert(err);
@@ -34,6 +32,14 @@ export default class Home extends Component {
   openDrawer = () => {
     this.drawer._root.open()
   };
+
+  goToWeatherPage = () => {
+    this.props.navigation.navigate('WeatherPage');
+  }
+
+  goToSchedulePage = () => {
+    this.props.navigation.navigate('Schedule');
+  }
 
   hangNow = async () => {
     try {
@@ -60,7 +66,6 @@ export default class Home extends Component {
   }
 
   render() {
-    console.log(this.state.hangNow, 'masa berubah 2x');
     return (
       <SideDrawer pageTitle="Home" navigation={this.props.navigation}>
         <Grid style={{ marginHorizontal: 10, marginTop: 20 }}>
@@ -74,15 +79,15 @@ export default class Home extends Component {
             <UserControl
               description="Scheduler"
               color="#F8B195"
-              fn={() => alert('boy')}
+              fn={this.goToSchedulePage}
               symbol="timer"
             />
           </Row>
           <Row style={{}}>
             <UserControl
-              description="Template box"
+              description="Weather"
               color="#6C5B9C"
-              fn={() => alert('boy')}
+              fn={this.goToWeatherPage}
               symbol="cloud-circle"
             />
             <UserControl
