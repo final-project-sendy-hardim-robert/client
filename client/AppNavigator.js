@@ -4,6 +4,7 @@ import SignUpPage from './containers/SignUpPage/index.js';
 import HomePage from './containers/UserPanel/index.js';
 import AuthLoading from './components/AuthLoading/index.js';
 import Scheduler from './containers/Scheduler/index.js';
+import WeatherPage from './containers/WeatherPage/index.js';
 
 const FirstPage = createStackNavigator({
   SignIn: SignInPage,
@@ -16,7 +17,8 @@ const FirstPage = createStackNavigator({
 
 const Home = createStackNavigator({
   HomePage: HomePage,
-  Schedule: Scheduler
+  Schedule: Scheduler,
+  WeatherPage: WeatherPage
 }, {
     headerMode: 'none',
     initialRouteName: 'HomePage'

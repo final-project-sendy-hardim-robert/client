@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { ActivityIndicator, AsyncStorage } from 'react-native';
+import { ActivityIndicator, AsyncStorage, View } from 'react-native';
 class AuthLoading extends PureComponent {
   constructor(props) {
     super(props);
@@ -12,7 +12,9 @@ class AuthLoading extends PureComponent {
 
   render() { 
     return (
-      <ActivityIndicator size="large" color="#0000ff" />
+      <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
     );
   }
 }
