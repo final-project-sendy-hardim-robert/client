@@ -1,31 +1,26 @@
 import React, { Component } from 'react';
-import { ToastAndroid, StyleSheet, Image } from 'react-native';
+import { ToastAndroid, StyleSheet, Image, AsyncStorage, View } from 'react-native';
 import axios from 'axios';
-import { weatherConditions } from './utils.js';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { Container, Header, Content, Card, CardItem, Text, Body } from "native-base";
+import { Container, Content, Card, CardItem, Text, Body } from "native-base";
 import moment from 'moment';
+import SideDrawer from '../../components/Drawer';
 
 class WeatherPage  extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      latitude: null,
-      longitude: null,
+      latitude: '',
+      longitude: '',
       weatherData: []
     }
   }
 
   componentDidMount() {
-    const fullGMTFromMoment = moment().format().substring(moment().format().indexOf('+'))
-    const GMTNumber = Number(fullGMTFromMoment.substring(0, 3));
-    const date = new Date('UTC');
-    console.log(date, 'test')
     navigator.geolocation.getCurrentPosition(
       (position) => {
         this.setState({
           latitude: position.coords.latitude,
-          longitude: position.coords.longitude
+          longitude: position.coords.longitude,
         })
     },
     (error) => ToastAndroid.show('Cannot get current location' + error.message, ToastAndroid.SHORT)),
@@ -33,41 +28,52 @@ class WeatherPage  extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevState !== this.state) {
-      const { latitude, longitude } = this.state;
-      if (latitude !== null && longitude !== null) {
-        axios({
-          method: 'get',
-          url: `https://api.openweathermap.org/data/2.5/forecast?units=metric&lat=${latitude}&lon=${longitude}&appid=d17c75afa0e44ed8fb16e111c94383e9`
-        })
-          .then(({ data }) => {
-           this.setState({
-             weatherData: data.list
-           })
+      if (prevState.latitude !== this.state.latitude) {
+        const { latitude, longitude } = this.state;
+        AsyncStorage.getItem('token')
+          .then((data) => {
+            const token = data;
+            if (latitude !== null && longitude !== null) {
+              return axios({
+                method: 'get',
+                url: `http://localhost:3000/weather?latitude=${latitude}&longitude=${longitude}`,
+                headers: {
+                  token: token
+                }
+              })
+            }
+          })
+          .then(({data: { data }}) => {
+            this.setState({
+              weatherData: data.slice(0, 8)
+              })
           })
           .catch((err) => {
-            ToastAndroid.show(err, ToastAndroid.LONG)
+            
           })
-      }
     }
   }
 
   render() { 
     return (
+      <SideDrawer pageTitle="Today Weather Forecast" navigation={this.props.navigation}>
       <Container style={styles.container}>
        <Content padder>
-      {this.state.weatherData.map((datum) => {
+      {this.state.weatherData.map((datum, index) => {
         return (
-          <Card>
+          <Card key={index}>
             <CardItem header bordered>
-              <Text>NativeBase</Text>
-            </CardItem>
+                <Text>{moment(datum['dt_txt']).format('HH:mm')}</Text>
+              </CardItem>
             <CardItem bordered>
               <Body>
-                <Image
-                    source={ {uri: `http://openweathermap.org/img/w/${datum.weather[0].icon}.png`}}
-                    style={{height: 70, width: 70}}
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
+                  <Image
+                      source={ {uri: `http://openweathermap.org/img/w/${datum.weather[0].icon}.png`}}
+                      style={{height: 70, width: 70}}
                   />
+                  <Text style={{ fontSize: 50 }}>{Math.floor(datum.main.temp)}˚C</Text>
+                </View>
                 <Text>{(datum.weather[0].description)}</Text>
               </Body>
             </CardItem>
@@ -75,9 +81,9 @@ class WeatherPage  extends Component {
         )
       })
       }
-      
         </Content>
       </Container>
+      </SideDrawer>
     );
   }
 }
