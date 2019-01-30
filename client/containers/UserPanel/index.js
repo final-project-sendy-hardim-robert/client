@@ -8,6 +8,7 @@ import firebase from 'react-native-firebase';
 import axios from 'axios';
 import { weatherConditions } from './components/utils.js';
 const { height, width } = Dimensions.get('window');
+import moment from 'moment'
 
 export default class Home extends Component {
   state = {
@@ -219,26 +220,28 @@ export default class Home extends Component {
                   </View>
                   <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'white' }}>{(currentWeather.weather[0].description)}</Text>
                   <Text style={{ fontStyle: 'italic', color: 'white' }}>{suggestion}</Text>
+                </Body>
+              </CardItem>
+              <CardItem footer bordered style={{backgroundColor: '#F0F0F0'}}>
                   {
                     startRecomendation && finishRecomendation
-                      ? <View>
-                        <Text>Start: {startRecomendation} Finish: {finishRecomendation}</Text>
-                        <Button
-                          rounded
-                          onPress={() => { this.saveSchedule(startRecomendation, finishRecomendation) }}
-                          style={{ backgroundColor: '#0072BB' }}
-                        >
-                          <Text>Save Schedule</Text>
-                        </Button>
-                      </View>
+                      ? <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+                          <Text style={{flex: 1, marginHorizontal: 20}}>Start at {moment(startRecomendation, 'HH:m').format('HH:mm')} Finish at {moment(finishRecomendation, 'HH:m').format('HH:mm')}</Text>
+                          <Button
+                            rounded
+                            onPress={() => { this.saveSchedule(startRecomendation, finishRecomendation) }}
+                            style={{ backgroundColor: '#0072BB', flex: 1, marginHorizontal: 30}}
+                          >
+                          <Text style={{fontSize: 10}}>Save Schedule</Text>
+                          </Button>
+                        </View>
                       : null
                   }
-                </Body>
               </CardItem>
             </Card>
           }
           <Grid style={{ marginHorizontal: 10, marginTop: 10 }}>
-            <Row style={{ height: height / 3 }}>
+            <Row style={{ height: height / 3.2 }}>
               <UserControl
                 description="Weather"
                 color="#6C5B9C"
