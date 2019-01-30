@@ -137,7 +137,14 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-device-info')
+    compile project(':react-native-firebase')
+    implementation project(':react-native-firebase')
+    implementation "com.google.firebase:firebase-database:16.0.1"
+    compile project(':react-native-vector-icons')
     compile project(':react-native-gesture-handler')
+    implementation "com.google.android.gms:play-services-base:16.0.1"
+    implementation "com.google.firebase:firebase-core:16.0.6"
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
     implementation "com.facebook.react:react-native:+"  // From node_modules
@@ -149,3 +156,5 @@ task copyDownloadableDepsToLibs(type: Copy) {
     from configurations.compile
     into 'libs'
 }
+
+apply plugin: 'com.google.gms.google-services'
