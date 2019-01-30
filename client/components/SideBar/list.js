@@ -9,6 +9,7 @@ class List extends Component {
   activePage() {
     if (this.props.navigation.state.routeName === 'HomePage' && this.props.title === 'Home') return 'black'
     else if (this.props.navigation.state.routeName === 'Schedule' && this.props.title === 'Schedule') return 'black'
+    else if (this.props.navigation.state.routeName === 'WeatherPage' && this.props.title === 'Weather') return 'black'
     else return 'grey'
 
   }
