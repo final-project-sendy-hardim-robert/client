@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Dimensions, AsyncStorage, View, Image, ScrollView, ToastAndroid } from 'react-native';
+import { Dimensions, AsyncStorage, View, Image, ScrollView, ToastAndroid, ActivityIndicator } from 'react-native';
 import { Col, Row, Grid } from 'react-native-easy-grid';
-import { Container, Content, Card, CardItem, Text, Body, Button } from "native-base";
+import { Container, Content, Card, CardItem, Text, Body, Button, Toast } from "native-base";
 import SideDrawer from '../../components/Drawer';
 import UserControl from './components/UserControl';
 import firebase from 'react-native-firebase';
@@ -74,7 +74,7 @@ export default class Home extends Component {
         return true
       }
     } catch (err) {
-      console.log(err, 'sini ga coi')
+     alert(err)
     }
   }
 
@@ -91,6 +91,21 @@ export default class Home extends Component {
 
   goToSchedulePage = () => {
     this.props.navigation.navigate('Schedule');
+  }
+
+  turnOnSchedule = async () => {
+    try {
+      const token = await AsyncStorage.getItem('token')
+      const result = await axios({
+        method: 'POST',
+        url: 'http://localhost:3000/schedule/start',
+        headers: {
+          token: token
+        }
+      })
+    } catch(err) {
+      alert('Something happened! Please try again !')
+    }
   }
 
   hangNow = async () => {
@@ -132,9 +147,11 @@ export default class Home extends Component {
       }
     }).then(({ data }) => {
       ToastAndroid.show('Schedule saved, activate the toggle immediately!', ToastAndroid.SHORT)
+      this.turnOnSchedule();
     })
-    // .catch(err => {
-    //   alert(JSON.stringify(err))
+    .catch(err => {
+      alert('Something happened! Please try again !')
+    })
   }
 
   render() {
@@ -182,6 +199,10 @@ export default class Home extends Component {
     return (
       <SideDrawer pageTitle="Home" navigation={this.props.navigation}>
         <ScrollView>
+          {Object.keys(currentWeather).length === 0 && 
+          <View style={{height: 285, flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            <ActivityIndicator size="large" color="#0000ff" />   
+          </View>}
           {Object.keys(currentWeather).length > 0 &&
             <Card>
               <CardItem header bordered style={{ backgroundColor: '#18A999', borderColor: 'white' }}>

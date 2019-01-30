@@ -28,7 +28,7 @@ class SignUpPage extends Component {
 
       this.props.navigation.navigate('SignIn');
     } catch (err) {
-        alert(err)
+      alert('Something happened! Please try again !')
       }
   }
 

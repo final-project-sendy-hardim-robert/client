@@ -3,6 +3,7 @@ import { Dimensions, TimePickerAndroid, View, AsyncStorage, Switch, StyleSheet, 
 import { Container, Header, Content, ListItem, CheckBox, Text, Body, Button } from 'native-base';
 import SideDrawer from '../../components/Drawer';
 import axios from 'axios';
+import moment from 'moment';
 import { withNavigation } from 'react-navigation'
 const { height, width } = Dimensions.get('window');
 
@@ -11,6 +12,7 @@ class Scheduler extends Component {
     start: '',
     finish: '',
     token: '',
+    formattedTime: '',
     active: false
   }
 
@@ -63,6 +65,7 @@ class Scheduler extends Component {
       ToastAndroid.show('Schedule saved, activate the toggle immediately!', ToastAndroid.SHORT)
     })
       .catch(err => {
+        alert('Something happened! Please try again !')
       })
   }
 
@@ -77,9 +80,10 @@ class Scheduler extends Component {
         is24Hour: false,
       });
       if (action !== TimePickerAndroid.dismissedAction) {
+        if (param === start) {}
         param === 'start'
           ? this.setState({
-            start: `${hour}:${minute}`
+            start: `${hour}:${minute}`,
           })
           : this.setState({
             finish: `${hour}:${minute}`
@@ -101,7 +105,7 @@ class Scheduler extends Component {
       .then(({ data }) => {
       })
       .catch(err => {
-        console.log(err)
+        alert('Something happened! Please try again !')
       })
   }
 
@@ -116,7 +120,7 @@ class Scheduler extends Component {
       .then(({ data }) => {
       })
       .catch(err => {
-        console.log(err)
+        alert('Something happened! Please try again !')
       })
   }
 
@@ -167,8 +171,8 @@ class Scheduler extends Component {
               <Text style={styles.start}>Collect clothes at</Text>
             </View>
             <View style={styles.container}>
-              <Text style={styles.time}>{this.state.start} </Text>
-              <Text style={styles.time}>{this.state.finish} </Text>
+              <Text style={styles.time}>{this.state.start.length > 0 && moment(this.state.start, 'HH:m').format('HH:mm')} </Text>
+              <Text style={styles.time}>{this.state.finish.length > 0 && moment(this.state.finish, 'HH:m').format('HH:mm')} </Text>
             </View>
             <View style={styles.container}>
              <View style={styles.button}>
