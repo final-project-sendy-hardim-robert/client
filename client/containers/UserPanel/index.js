@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Dimensions, AsyncStorage, View, Image, ScrollView } from 'react-native';
+import { Dimensions, AsyncStorage, View, Image, ScrollView, ToastAndroid } from 'react-native';
 import { Col, Row, Grid } from 'react-native-easy-grid';
-import { Container, Content, Card, CardItem, Text, Body } from "native-base";
+import { Container, Content, Card, CardItem, Text, Body, Button } from "native-base";
 import SideDrawer from '../../components/Drawer';
 import UserControl from './components/UserControl';
 import firebase from 'react-native-firebase';
@@ -16,7 +16,7 @@ export default class Home extends Component {
     longitude: '',
     weatherData: [],
     currentWeather: {},
-    suggestion: ''
+    suggestion: '',
   }
 
   async componentDidMount() {
@@ -31,8 +31,8 @@ export default class Home extends Component {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           this.setState({
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
+            latitude: 6.1805,
+            longitude: 106.8283,
           })
         },
         (error) => ToastAndroid.show('Cannot get current location' + error.message, ToastAndroid.SHORT)),
@@ -117,13 +117,37 @@ export default class Home extends Component {
     }
   }
 
+  saveSchedule = async (start, finish) => {
+    const token = await AsyncStorage.getItem('token')
+    axios({
+      method: 'POST',
+      url: 'http://localhost:3000/schedule',
+      data: {
+        start: start,
+        finish: finish,
+        active: false
+      },
+      headers: {
+        token: token
+      }
+    }).then(({ data }) => {
+      ToastAndroid.show('Schedule saved, activate the toggle immediately!', ToastAndroid.SHORT)
+    })
+    // .catch(err => {
+    //   alert(JSON.stringify(err))
+  }
+
   render() {
     const { weatherData, currentWeather } = this.state;
     let suggestion = ''
-    console.log(' apa aja isinya')
+    let startRecomendation = ''
+    let finishRecomendation = ''
+    let today = new Date();
+
     if (weatherData.length > 0) {
-      let nextData = {};
+      let nextData = [];
       let currentHour = new Date().getHours();
+      let index = 0
 
       for (let i = 0; i < weatherData.length; i++) {
         let datahour = Number(weatherData[i]['dt_txt'].substring(11, 13))
@@ -133,12 +157,26 @@ export default class Home extends Component {
         }
 
         if (datahour - Number(currentHour) >= 0) {
-          nextData = weatherData[i]
-          break;
+          nextData.push(weatherData[i])
+          index += 1
+
+          if (index === 2) {
+            break
+          }
         }
       }
 
-      suggestion = weatherConditions[nextData.weather[0].main].subtitle
+      if (nextData[0].weather[0].main != 'Rain' && nextData[0].weather[0].main != 'Thunderstorm' && nextData[0].weather[0].main != 'Snow') {
+        startRecomendation = today.getHours() + ":" + (today.getMinutes() + 2)
+      }
+      if (nextData[1].weather[0].main != 'Rain' && nextData[0].weather[0].main != 'Thunderstorm' && nextData[0].weather[0].main != 'Snow') {
+        if (today.getHours() + 4 < 23) {
+          finishRecomendation = (today.getHours() + 4) + ":" + today.getMinutes()
+        }
+      }
+
+
+      suggestion = weatherConditions[nextData[0].weather[0].main].subtitle
     }
 
     return (
@@ -160,6 +198,20 @@ export default class Home extends Component {
                   </View>
                   <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'white' }}>{(currentWeather.weather[0].description)}</Text>
                   <Text style={{ fontStyle: 'italic', color: 'white' }}>{suggestion}</Text>
+                  {
+                    startRecomendation && finishRecomendation
+                      ? <View>
+                        <Text>Start: {startRecomendation} Finish: {finishRecomendation}</Text>
+                        <Button
+                          rounded
+                          onPress={() => { this.saveSchedule(startRecomendation, finishRecomendation) }}
+                          style={{ backgroundColor: '#0072BB' }}
+                        >
+                          <Text>Save Schedule</Text>
+                        </Button>
+                      </View>
+                      : null
+                  }
                 </Body>
               </CardItem>
             </Card>
