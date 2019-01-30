@@ -80,7 +80,6 @@ class Scheduler extends Component {
         is24Hour: false,
       });
       if (action !== TimePickerAndroid.dismissedAction) {
-        if (param === start) {}
         param === 'start'
           ? this.setState({
             start: `${hour}:${minute}`,
