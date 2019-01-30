@@ -201,7 +201,7 @@ export default class Home extends Component {
       <SideDrawer pageTitle="Home" navigation={this.props.navigation}>
         <ScrollView>
           {Object.keys(currentWeather).length === 0 && 
-          <View style={{height: 285, flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <View style={{height: 290, flex: 1, justifyContent: 'center', alignItems: 'center'}}>
             <ActivityIndicator size="large" color="#0000ff" />   
           </View>}
           {Object.keys(currentWeather).length > 0 &&
@@ -255,7 +255,7 @@ export default class Home extends Component {
                 symbol="timer"
               />
             </Row>
-            <Row style={{}}>
+            <Row style={{marginBottom: 20}}>
               <UserControl
                 description={!this.state.hangNow ? "Hang it now" : "Take it down"}
                 color="#F67280"
