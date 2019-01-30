@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { Dimensions, AsyncStorage, View, Image } from 'react-native';
+import { Dimensions, AsyncStorage, View, Image, ScrollView } from 'react-native';
 import { Col, Row, Grid } from 'react-native-easy-grid';
 import { Container, Content, Card, CardItem, Text, Body } from "native-base";
 import SideDrawer from '../../components/Drawer';
 import UserControl from './components/UserControl';
 import firebase from 'react-native-firebase';
-import axios from  'axios';
+import axios from 'axios';
 import { weatherConditions } from './components/utils.js';
 const { height, width } = Dimensions.get('window');
 
@@ -25,7 +25,7 @@ export default class Home extends Component {
       firebase.database().ref(`/Users/${userId}`).on('value', (snapshot, err) => {
         setTimeout(() => this.setState({
           hangNow: snapshot.val().hangNow
-        }), 500)      
+        }), 500)
       })
 
       navigator.geolocation.getCurrentPosition(
@@ -34,10 +34,10 @@ export default class Home extends Component {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
           })
-      },
-      (error) => ToastAndroid.show('Cannot get current location' + error.message, ToastAndroid.SHORT)),
-      { enableHighAccuracy: true, timeout: 50000, maximumAge: 2000 }
-    } catch(err) {
+        },
+        (error) => ToastAndroid.show('Cannot get current location' + error.message, ToastAndroid.SHORT)),
+        { enableHighAccuracy: true, timeout: 50000, maximumAge: 2000 }
+    } catch (err) {
       alert(err);
     }
   }
@@ -73,7 +73,7 @@ export default class Home extends Component {
 
         return true
       }
-    } catch(err) {
+    } catch (err) {
       console.log(err, 'sini ga coi')
     }
   }
@@ -100,7 +100,7 @@ export default class Home extends Component {
         await firebase.database().ref(`/Users/${userId}`).update({
           hangNow: true
         })
-        
+
         this.setState({
           hangNow: !this.state.hangNow
         })
@@ -112,7 +112,7 @@ export default class Home extends Component {
           hangNow: !this.state.hangNow
         })
       }
-    } catch(err) {
+    } catch (err) {
       alert(err)
     }
   }
@@ -127,15 +127,15 @@ export default class Home extends Component {
 
       for (let i = 0; i < weatherData.length; i++) {
         let datahour = Number(weatherData[i]['dt_txt'].substring(11, 13))
-        
+
         if (datahour === 0) {
           datahour = 24
         }
-        
+
         if (datahour - Number(currentHour) >= 0) {
           nextData = weatherData[i]
           break;
-        } 
+        }
       }
 
       suggestion = weatherConditions[nextData.weather[0].main].subtitle
@@ -143,56 +143,52 @@ export default class Home extends Component {
 
     return (
       <SideDrawer pageTitle="Home" navigation={this.props.navigation}>
-      {Object.keys(currentWeather).length > 0 &&
-        <Card>
-            <CardItem header bordered>
-                <Text>Current Weather</Text>
+        <ScrollView>
+          {Object.keys(currentWeather).length > 0 &&
+            <Card>
+              <CardItem header bordered style={{ backgroundColor: '#18A999', borderColor: 'white' }}>
+                <Text style={{ color: 'white' }}>Current Weather</Text>
               </CardItem>
-            <CardItem bordered>
-              <Body>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
-                  <Image
-                      source={ {uri: `http://openweathermap.org/img/w/${currentWeather.weather[0].icon}.png`}}
-                      style={{height: 70, width: 70}}
-                  />
-                  <Text style={{ fontSize: 50 }}>{Math.floor(currentWeather.main.temp)}˚C</Text>
-                </View>
-                <Text>{(currentWeather.weather[0].description)}</Text>
-                <Text>{JSON.stringify(suggestion)}</Text>
-              </Body>
-            </CardItem>
-          </Card>
-      }
-        <Grid style={{ marginHorizontal: 10, marginTop: 10 }}>
-          <Row style={{ height: height / 3 }}>
-            <UserControl
-              description={!this.state.hangNow ? "Hang it now" : "Take it down"}
-              color="#F67280"
-              fn={this.hangNow}
-              symbol="shirt"
-            />
-            <UserControl
-              description="Scheduler"
-              color="#F8B195"
-              fn={this.goToSchedulePage}
-              symbol="timer"
-            />
-          </Row>
-          <Row style={{}}>
-            <UserControl
-              description="Weather"
-              color="#6C5B9C"
-              fn={this.goToWeatherPage}
-              symbol="cloud-circle"
-            />
-            <UserControl
-              description="Hang it now"
-              color="#C9718A"
-              fn={() => alert('boy')}
-              symbol="settings"
-            />
-          </Row>
-        </Grid>
+              <CardItem bordered style={{ backgroundColor: '#18A999' }}>
+                <Body>
+                  <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
+                    <Image
+                      source={{ uri: `http://openweathermap.org/img/w/${currentWeather.weather[0].icon}.png` }}
+                      style={{ height: 80, width: 80 }}
+                    />
+                    <Text style={{ fontSize: 48, color: 'white' }}>{Math.floor(currentWeather.main.temp)}˚C</Text>
+                  </View>
+                  <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'white' }}>{(currentWeather.weather[0].description)}</Text>
+                  <Text style={{ fontStyle: 'italic', color: 'white' }}>{suggestion}</Text>
+                </Body>
+              </CardItem>
+            </Card>
+          }
+          <Grid style={{ marginHorizontal: 10, marginTop: 10 }}>
+            <Row style={{ height: height / 3 }}>
+              <UserControl
+                description="Weather"
+                color="#6C5B9C"
+                fn={this.goToWeatherPage}
+                symbol="cloud-circle"
+              />
+              <UserControl
+                description="Scheduler"
+                color="#F8B195"
+                fn={this.goToSchedulePage}
+                symbol="timer"
+              />
+            </Row>
+            <Row style={{}}>
+              <UserControl
+                description={!this.state.hangNow ? "Hang it now" : "Take it down"}
+                color="#F67280"
+                fn={this.hangNow}
+                symbol="shirt"
+              />
+            </Row>
+          </Grid>
+        </ScrollView>
       </SideDrawer>
     );
   }

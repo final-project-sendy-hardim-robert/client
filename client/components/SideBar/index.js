@@ -55,9 +55,9 @@ export default class SideBar extends Component {
             </Col>
           </Row>
           <List title="Home" iconName="home" action={() => this.navigateTo('HomePage')} />
-          <List title="Schedule" iconName="clock" action={() => this.navigateTo('Schedule')} />
-          <List title="Weather" iconName="cloud" action={() => this.navigateTo('Schedule')} />
-          <List title="Logout" iconName="power" action={this.logOut} />
+          <List title="Scheduler" iconName="clock" action={() => this.navigateTo('Schedule')} />
+          <List title="Weather" iconName="cloud" action={() => this.navigateTo('WeatherPage')} />
+          <List title="Sign Out" iconName="power" action={this.logOut} />
         </Grid>
       </Container>
     )
